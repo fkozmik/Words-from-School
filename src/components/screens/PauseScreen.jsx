@@ -8,12 +8,20 @@ const PauseScreen = ({ completedCount, onContinue }) => (
       <p className="text-xl text-blue-300 mb-6">
         Tu as fait {completedCount} mots, c'est super !
       </p>
-      <button
-        onClick={onContinue}
-        className="bg-gradient-to-r from-green-500 to-teal-600 text-white px-8 py-4 rounded-full text-xl font-bold hover:scale-105 transition-transform"
-      >
-        Reprendre la mission ! 🚀
-      </button>
+		<div className="flex gap-4 justify-center flex-col">
+			<button
+				onClick={onContinue}
+				className="bg-gradient-to-r from-green-500 to-teal-600 text-white px-8 py-4 rounded-full text-xl font-bold hover:scale-105 transition-transform"
+			>
+				Reprendre la mission ! 🚀
+			</button>
+			<button
+				onClick={onContinue}
+				className="bg-gradient-to-r from-red-400 to-orange-400 text-white px-8 py-4 rounded-full text-xl font-bold hover:scale-105 transition-transform"
+			>
+				Reprendre la ! 🚀
+			</button>
+		</div>
     </div>
   </div>
 );
