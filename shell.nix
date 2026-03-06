@@ -3,11 +3,11 @@
 pkgs.mkShell {
   buildInputs = with pkgs; [
     nodejs_20
-    yarn
   ];
   
   shellHook = ''
-    echo "Environnement pr�t pour Mission Spatiale \U0001f680"
+    echo "Environnement prêt pour Mission Spatiale !"
+    echo "Dev :"
     echo "Lance: npm install && npm run dev"
   '';
 }
