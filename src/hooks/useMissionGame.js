@@ -16,6 +16,7 @@ export const useMissionGame = () => {
   const [showError, setShowError] = useState(false);
   const [showPause, setShowPause] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
+  const [completedLists, setCompletedLists] = useState([]);
 
   useEffect(() => {
     fetch('/lists/words.json')
@@ -76,6 +77,7 @@ export const useMissionGame = () => {
           setShowPause(true);
         } else {
           setIsComplete(true);
+          setCompletedLists(prev => [...new Set([...prev, selectedList])]);
         }
       }, 1500);
     } else {
@@ -129,6 +131,7 @@ export const useMissionGame = () => {
     showError,
     showPause,
     isComplete,
+    completedLists,
     // Valeurs calculées
     startIndex,
     endIndex,

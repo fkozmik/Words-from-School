@@ -32,6 +32,7 @@ const MissionSpatiale = () => {
     showError,
     showPause,
     isComplete,
+    completedLists,
     startIndex,
     endIndex,
     currentBundle,
@@ -53,6 +54,7 @@ const MissionSpatiale = () => {
       <ListSelectionScreen
         wordLists={wordLists}
         onSelectList={handleSelectList}
+        completedLists={completedLists}
       />
     );
   }
