@@ -61,7 +61,13 @@ export const useMissionGame = () => {
     setShuffledLetters(newShuffled);
   };
 
-  const handleValidate = (currentWord, startIndex, endIndex) => {
+  // Calculs dérivés
+  const startIndex = currentBundleIndex * BUNDLE_SIZE;
+  const endIndex = Math.min(startIndex + BUNDLE_SIZE, wordsArray.length);
+  const currentBundle = wordsArray.slice(startIndex, endIndex);
+  const currentWord = currentBundle[currentWordInBundle];
+
+  const handleValidate = () => {
     const formedWord = selectedLetters.join('');
     if (formedWord === currentWord) {
       setShowSuccess(true);
@@ -69,7 +75,6 @@ export const useMissionGame = () => {
       setCompletedWords([...completedWords, globalWordIndex]);
 
       setTimeout(() => {
-        const currentBundle = wordsArray.slice(startIndex, endIndex);
         if (currentWordInBundle < currentBundle.length - 1) {
           setCurrentWordInBundle(currentWordInBundle + 1);
         } else if (endIndex < wordsArray.length) {
@@ -88,7 +93,7 @@ export const useMissionGame = () => {
     }
   };
 
-  const handleReset = (currentWord) => {
+  const handleReset = () => {
     setShuffledLetters(currentWord.split('').sort(() => Math.random() - 0.5));
     setSelectedLetters([]);
   };
@@ -108,38 +113,17 @@ export const useMissionGame = () => {
     setIsComplete(false);
   };
 
-  // Calculs dérivés
-  const startIndex = currentBundleIndex * BUNDLE_SIZE;
-  const endIndex = Math.min(startIndex + BUNDLE_SIZE, wordsArray.length);
-  const currentBundle = wordsArray.slice(startIndex, endIndex);
-  const currentWord = currentBundle[currentWordInBundle];
-
   return {
-    // État
-    wordLists,
-    selectedList,
-    wordsArray,
-    loading,
-    currentBundleIndex,
-    currentWordInBundle,
-    completedWords,
-    shuffledLetters,
-    selectedLetters,
-    showSuccess,
-    showError,
-    showPause,
-    isComplete,
-    // Valeurs calculées
-    startIndex,
-    endIndex,
-    currentBundle,
-    currentWord,
-    // Actions
-    handleSelectList,
-    handleLetterClick,
-    handleValidate,
-    handleReset,
-    handleContinueAfterPause,
-    restartMission,
+    state: {
+      wordLists, selectedList, wordsArray, loading,
+      currentBundleIndex, currentWordInBundle, completedWords,
+      shuffledLetters, selectedLetters,
+      showSuccess, showError, showPause, isComplete,
+    },
+    derived: { startIndex, endIndex, currentBundle, currentWord },
+    actions: {
+      handleSelectList, handleLetterClick, handleValidate,
+      handleReset, handleContinueAfterPause, restartMission,
+    },
   };
 };
