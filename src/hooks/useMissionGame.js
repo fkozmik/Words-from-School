@@ -116,11 +116,14 @@ export const useMissionGame = () => {
 		setIsComplete(false);
 	};
 
-  // Calculs dérivés
-  const startIndex = currentBundleIndex * BUNDLE_SIZE;
-  const endIndex = Math.min(startIndex + BUNDLE_SIZE, wordsArray.length);
-  const currentBundle = wordsArray.slice(startIndex, endIndex);
-  const currentWord = currentBundle[currentWordInBundle];
+	const restartMission = () => {
+		setSelectedList(null);
+		setWordsArray([]);
+		setCurrentBundleIndex(0);
+		setCurrentWordInBundle(0);
+		setCompletedWords([]);
+		setIsComplete(false);
+	};
 
 	return {
 		state: {

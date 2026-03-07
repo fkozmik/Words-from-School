@@ -1,4 +1,4 @@
-import { useMissionGame } from './hooks/useMissionGame';
+import {useMissionGame} from './hooks/useMissionGame';
 
 // Screens
 import LoadingScreen from './components/screens/LoadingScreen';
@@ -18,36 +18,30 @@ import FeedbackOverlay from './components/ui/FeedbackOverlay';
 import BackgroundStars from './components/ui/BackgroundStars';
 
 const MissionSpatiale = () => {
-  const {
-    wordLists,
-    selectedList,
-    wordsArray,
-    loading,
-    currentBundleIndex,
-    currentWordInBundle,
-    completedWords,
-    shuffledLetters,
-    selectedLetters,
-    showSuccess,
-    showError,
-    showPause,
-    isComplete,
-    completedLists,
-    startIndex,
-    endIndex,
-    currentBundle,
-    currentWord,
-    handleSelectList,
-    handleLetterClick,
-    handleValidate,
-    handleReset,
-    handleContinueAfterPause,
-    restartMission,
-  } = useMissionGame();
+	const {state, derived, actions} = useMissionGame();
+	const {
+		wordLists,
+		selectedList,
+		wordsArray,
+		loading,
+		currentBundleIndex,
+		currentWordInBundle,
+		completedWords,
+		shuffledLetters,
+		selectedLetters,
+		showSuccess,
+		showError,
+		showPause,
+		isComplete,
+	} = state;
+	const {startIndex, endIndex, currentBundle, currentWord} = derived;
+	const {
+		handleSelectList, handleLetterClick, handleValidate, handleReset, handleContinueAfterPause, restartMission,
+	} = actions;
 
-  if (loading) {
-    return <LoadingScreen />;
-  }
+	if (loading) {
+		return <LoadingScreen/>;
+	}
 
   if (!selectedList) {
     return (
@@ -59,62 +53,56 @@ const MissionSpatiale = () => {
     );
   }
 
-  if (showPause) {
-    return (
-      <PauseScreen
-        completedCount={completedWords.length}
-        onContinue={handleContinueAfterPause}
-      />
-    );
-  }
+	if (showPause) {
+		return (<PauseScreen
+			completedCount={completedWords.length}
+			onContinue={handleContinueAfterPause}
+		/>);
+	}
 
-  if (isComplete) {
-    return (
-      <CompletionScreen
-        completedCount={completedWords.length}
-        totalCount={wordsArray.length}
-        onRestart={restartMission}
-      />
-    );
-  }
+	if (isComplete) {
+		return (<CompletionScreen
+			completedCount={completedWords.length}
+			totalCount={wordsArray.length}
+			onRestart={restartMission}
+		/>);
+	}
 
-  return (
-    <div className="min-h-screen bg-gradient-to-b from-indigo-900 via-purple-900 to-pink-900 p-4">
-      <ProgressHeader
-        selectedList={selectedList}
-        currentBundleIndex={currentBundleIndex}
-        currentWordInBundle={currentWordInBundle}
-        bundleLength={currentBundle.length}
-        completedCount={completedWords.length}
-        totalCount={wordsArray.length}
-      />
+	return (<div className="min-h-screen bg-gradient-to-b from-indigo-900 via-purple-900 to-pink-900 p-4">
+		<ProgressHeader
+			selectedList={selectedList}
+			currentBundleIndex={currentBundleIndex}
+			currentWordInBundle={currentWordInBundle}
+			bundleLength={currentBundle.length}
+			completedCount={completedWords.length}
+			totalCount={wordsArray.length}
+		/>
 
-      <WordBundleDisplay
-        bundle={currentBundle}
-        startIndex={startIndex}
-        currentWordInBundle={currentWordInBundle}
-        completedWords={completedWords}
-      />
+		<WordBundleDisplay
+			bundle={currentBundle}
+			startIndex={startIndex}
+			currentWordInBundle={currentWordInBundle}
+			completedWords={completedWords}
+		/>
 
-      <CurrentWordCard word={currentWord} />
+		<CurrentWordCard word={currentWord}/>
 
-      <LetterArea
-        selectedLetters={selectedLetters}
-        shuffledLetters={shuffledLetters}
-        onLetterClick={handleLetterClick}
-      />
+		<LetterArea
+			selectedLetters={selectedLetters}
+			shuffledLetters={shuffledLetters}
+			onLetterClick={handleLetterClick}
+		/>
 
-      <ActionButtons
-        selectedLetters={selectedLetters}
-        currentWord={currentWord}
-        onReset={() => handleReset(currentWord)}
-        onValidate={() => handleValidate(currentWord, startIndex, endIndex)}
-      />
+		<ActionButtons
+			selectedLetters={selectedLetters}
+			currentWord={currentWord}
+			onReset={handleReset}
+			onValidate={handleValidate}
+		/>
 
-      <FeedbackOverlay showSuccess={showSuccess} showError={showError} />
-      <BackgroundStars />
-    </div>
-  );
+		<FeedbackOverlay showSuccess={showSuccess} showError={showError}/>
+		<BackgroundStars/>
+	</div>);
 };
 
 export default MissionSpatiale;
