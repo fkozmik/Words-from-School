@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import { useState, useEffect } from 'react';
 import {BUNDLE_SIZE} from '../constants/game';
 
 export const useMissionGame = () => {
@@ -16,6 +16,7 @@ export const useMissionGame = () => {
 	const [showError, setShowError] = useState(false);
 	const [showPause, setShowPause] = useState(false);
 	const [isComplete, setIsComplete] = useState(false);
+  const [completedLists, setCompletedLists] = useState([]);
 
 	useEffect(() => {
 		fetch('/lists/words.json')
@@ -75,12 +76,14 @@ export const useMissionGame = () => {
 			setCompletedWords([...completedWords, globalWordIndex]);
 
 			setTimeout(() => {
+        const currentBundle = wordsArray.slice(startIndex, endIndex);
 				if (currentWordInBundle < currentBundle.length - 1) {
 					setCurrentWordInBundle(currentWordInBundle + 1);
 				} else if (endIndex < wordsArray.length) {
 					setShowPause(true);
 				} else {
 					setIsComplete(true);
+          setCompletedLists(prev => [...new Set([...prev, selectedList])]);
 				}
 			}, 1500);
 		} else {
@@ -118,7 +121,7 @@ export const useMissionGame = () => {
 			wordLists, selectedList, wordsArray, loading,
 			currentBundleIndex, currentWordInBundle, completedWords,
 			shuffledLetters, selectedLetters,
-			showSuccess, showError, showPause, isComplete,
+			showSuccess, showError, showPause, isComplete, completedLists,
 		},
 		derived: {startIndex, endIndex, currentBundle, currentWord},
 		actions: {

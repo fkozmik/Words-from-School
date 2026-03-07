@@ -27,6 +27,7 @@ const MissionSpatiale = () => {
 		currentBundleIndex,
 		currentWordInBundle,
 		completedWords,
+		completedLists,
 		shuffledLetters,
 		selectedLetters,
 		showSuccess,
@@ -43,12 +44,15 @@ const MissionSpatiale = () => {
 		return <LoadingScreen/>;
 	}
 
-	if (!selectedList) {
-		return (<ListSelectionScreen
-			wordLists={wordLists}
-			onSelectList={handleSelectList}
-		/>);
-	}
+  if (!selectedList) {
+    return (
+      <ListSelectionScreen
+        wordLists={wordLists}
+        onSelectList={handleSelectList}
+        completedLists={completedLists}
+      />
+    );
+  }
 
 	if (showPause) {
 		return (<PauseScreen
