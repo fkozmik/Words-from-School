@@ -37,7 +37,7 @@ const MissionSpatiale = () => {
 	} = state;
 	const {startIndex, endIndex, currentBundle, currentWord} = derived;
 	const {
-		handleSelectList, handleLetterClick, handleValidate, handleReset, handleContinueAfterPause, restartMission,
+		handleSelectList, handleLetterClick, handleValidate, handleReset, handleContinueAfterPause, handleLeave, restartMission,
 	} = actions;
 
 	if (loading) {
@@ -58,6 +58,7 @@ const MissionSpatiale = () => {
 		return (<PauseScreen
 			completedCount={completedWords.length}
 			onContinue={handleContinueAfterPause}
+			onLeave={handleLeave}
 		/>);
 	}
 
