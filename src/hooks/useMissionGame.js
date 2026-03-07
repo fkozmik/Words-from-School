@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import { useState, useEffect } from 'react';
 import {BUNDLE_SIZE} from '../constants/game';
 
 export const useMissionGame = () => {
@@ -20,6 +20,7 @@ export const useMissionGame = () => {
 		setShowPause(false);
 		setSelectedList(null);
 	};
+  const [completedLists, setCompletedLists] = useState([]);
 
 	useEffect(() => {
 		fetch('/lists/words.json')
@@ -79,12 +80,14 @@ export const useMissionGame = () => {
 			setCompletedWords([...completedWords, globalWordIndex]);
 
 			setTimeout(() => {
+        const currentBundle = wordsArray.slice(startIndex, endIndex);
 				if (currentWordInBundle < currentBundle.length - 1) {
 					setCurrentWordInBundle(currentWordInBundle + 1);
 				} else if (endIndex < wordsArray.length) {
 					setShowPause(true);
 				} else {
 					setIsComplete(true);
+          setCompletedLists(prev => [...new Set([...prev, selectedList])]);
 				}
 			}, 1500);
 		} else {
@@ -117,12 +120,21 @@ export const useMissionGame = () => {
 		setIsComplete(false);
 	};
 
+	const restartMission = () => {
+		setSelectedList(null);
+		setWordsArray([]);
+		setCurrentBundleIndex(0);
+		setCurrentWordInBundle(0);
+		setCompletedWords([]);
+		setIsComplete(false);
+	};
+
 	return {
 		state: {
 			wordLists, selectedList, wordsArray, loading,
 			currentBundleIndex, currentWordInBundle, completedWords,
 			shuffledLetters, selectedLetters,
-			showSuccess, showError, showPause, isComplete,
+			showSuccess, showError, showPause, isComplete, completedLists,
 		},
 		derived: {startIndex, endIndex, currentBundle, currentWord},
 		actions: {
