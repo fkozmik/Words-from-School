@@ -16,6 +16,10 @@ export const useMissionGame = () => {
 	const [showError, setShowError] = useState(false);
 	const [showPause, setShowPause] = useState(false);
 	const [isComplete, setIsComplete] = useState(false);
+	const handleLeave = () => {
+		setShowPause(false);
+		setSelectedList(null);
+	};
 
 	useEffect(() => {
 		fetch('/lists/words.json')
@@ -124,6 +128,7 @@ export const useMissionGame = () => {
 		actions: {
 			handleSelectList, handleLetterClick, handleValidate,
 			handleReset, handleContinueAfterPause, restartMission,
+			handleLeave,
 		},
 	};
 };
