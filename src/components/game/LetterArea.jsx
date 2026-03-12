@@ -1,3 +1,5 @@
+import Button from '../ui/Button';
+
 const LetterArea = ({ selectedLetters, shuffledLetters, onLetterClick }) => (
   <div className="max-w-4xl mx-auto">
     {/* Zone des lettres sélectionnées */}
@@ -23,14 +25,15 @@ const LetterArea = ({ selectedLetters, shuffledLetters, onLetterClick }) => (
     {/* Boutons des lettres mélangées */}
     <div className="flex gap-4 flex-wrap justify-center mb-6">
       {shuffledLetters.map((letter, index) => (
-        <button
+        <Button
           key={index}
+          variant="letter"
+          size="lg"
+          rounded="2xl"
           onClick={() => onLetterClick(letter, index)}
-          className="bg-gradient-to-br from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-10 py-8 rounded-2xl text-4xl font-bold shadow-xl hover:scale-110 transition-transform active:scale-95 touch-manipulation select-none"
-          style={{ WebkitTapHighlightColor: 'transparent' }}
         >
           {letter}
-        </button>
+        </Button>
       ))}
     </div>
   </div>
