@@ -16,6 +16,7 @@ import ActionButtons from './components/game/ActionButtons';
 // UI components
 import FeedbackOverlay from './components/ui/FeedbackOverlay';
 import BackgroundStars from './components/ui/BackgroundStars';
+import HamburgerMenu from './components/ui/HamburgerMenu.jsx';
 
 const MissionSpatiale = () => {
 	const {state, derived, actions} = useMissionGame();
@@ -37,7 +38,7 @@ const MissionSpatiale = () => {
 	} = state;
 	const {startIndex, endIndex, currentBundle, currentWord} = derived;
 	const {
-		handleSelectList, handleLetterClick, handleValidate, handleReset, handleContinueAfterPause, handleLeave, restartMission,
+		handleSelectList, handleLetterClick, handleValidate, handleReset, handlePause, handleContinueAfterPause, handleLeave, restartMission,
 	} = actions;
 
 	if (loading) {
@@ -71,6 +72,7 @@ const MissionSpatiale = () => {
 	}
 
 	return (<div className="min-h-screen bg-gradient-to-b from-indigo-900 via-purple-900 to-pink-900 p-4">
+		<HamburgerMenu onLeave={handleLeave} onPause={handlePause} />
 		<ProgressHeader
 			selectedList={selectedList}
 			currentBundleIndex={currentBundleIndex}
