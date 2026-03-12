@@ -34,31 +34,47 @@ const MissionSpatiale = () => {
 		showSuccess,
 		showError,
 		showPause,
+		isBundleComplete,
 		isComplete,
 	} = state;
-	const {startIndex, endIndex, currentBundle, currentWord} = derived;
 	const {
-		handleSelectList, handleLetterClick, handleValidate, handleReset, handlePause, handleContinueAfterPause, handleLeave, restartMission,
+		startIndex,
+		endIndex,
+		currentBundle,
+		currentWord
+	} = derived;
+	const {
+		handleSelectList,
+		handleLetterClick,
+		handleValidate,
+		handleReset,
+		handlePause,
+		handleContinueAfterPause,
+		handleResumeAfterPause,
+		handleLeave,
+		restartMission
 	} = actions;
 
 	if (loading) {
 		return <LoadingScreen/>;
 	}
 
-  if (!selectedList) {
-    return (
-      <ListSelectionScreen
-        wordLists={wordLists}
-        onSelectList={handleSelectList}
-        completedLists={completedLists}
-      />
-    );
-  }
+	if (!selectedList) {
+		return (
+			<ListSelectionScreen
+				wordLists={wordLists}
+				onSelectList={handleSelectList}
+				completedLists={completedLists}
+			/>
+		);
+	}
 
 	if (showPause) {
 		return (<PauseScreen
 			completedCount={completedWords.length}
+			isBundleComplete={isBundleComplete}
 			onContinue={handleContinueAfterPause}
+			onResume={handleResumeAfterPause}
 			onLeave={handleLeave}
 		/>);
 	}
@@ -72,7 +88,7 @@ const MissionSpatiale = () => {
 	}
 
 	return (<div className="min-h-screen bg-gradient-to-b from-indigo-900 via-purple-900 to-pink-900 p-4">
-		<HamburgerMenu onLeave={handleLeave} onPause={handlePause} />
+		<HamburgerMenu onLeave={handleLeave} onPause={handlePause}/>
 		<ProgressHeader
 			selectedList={selectedList}
 			currentBundleIndex={currentBundleIndex}

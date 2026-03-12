@@ -15,12 +15,17 @@ export const useMissionGame = () => {
 	const [showSuccess, setShowSuccess] = useState(false);
 	const [showError, setShowError] = useState(false);
 	const [showPause, setShowPause] = useState(false);
+	const [isBundleComplete, setIsBundleComplete] = useState(false);
 	const [isComplete, setIsComplete] = useState(false);
 	const handleLeave = () => {
 		setShowPause(false);
+		setIsBundleComplete(false);
 		setSelectedList(null);
 	};
-	const handlePause = () => setShowPause(true);
+	const handlePause = () => {
+		setIsBundleComplete(false);
+		setShowPause(true);
+	};
   	const [completedLists, setCompletedLists] = useState([]);
 
 	useEffect(() => {
@@ -85,6 +90,7 @@ export const useMissionGame = () => {
 				if (currentWordInBundle < currentBundle.length - 1) {
 					setCurrentWordInBundle(currentWordInBundle + 1);
 				} else if (endIndex < wordsArray.length) {
+					setIsBundleComplete(true);
 					setShowPause(true);
 				} else {
 					setIsComplete(true);
@@ -108,8 +114,14 @@ export const useMissionGame = () => {
 
 	const handleContinueAfterPause = () => {
 		setShowPause(false);
+		setIsBundleComplete(false);
 		setCurrentBundleIndex(currentBundleIndex + 1);
 		setCurrentWordInBundle(0);
+	};
+
+	const handleResumeAfterPause = () => {
+		setShowPause(false);
+		setIsBundleComplete(false);
 	};
 
 	const restartMission = () => {
@@ -126,12 +138,12 @@ export const useMissionGame = () => {
 			wordLists, selectedList, wordsArray, loading,
 			currentBundleIndex, currentWordInBundle, completedWords,
 			shuffledLetters, selectedLetters,
-			showSuccess, showError, showPause, isComplete, completedLists,
+			showSuccess, showError, showPause, isBundleComplete, isComplete, completedLists,
 		},
 		derived: {startIndex, endIndex, currentBundle, currentWord},
 		actions: {
 			handleSelectList, handleLetterClick, handleValidate,
-			handleReset, handleContinueAfterPause, restartMission,
+			handleReset, handleContinueAfterPause, handleResumeAfterPause, restartMission,
 			handleLeave, handlePause,
 		},
 	};

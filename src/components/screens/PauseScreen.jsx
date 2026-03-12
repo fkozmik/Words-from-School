@@ -1,7 +1,7 @@
 import {Star} from 'lucide-react';
 import Button from '../ui/Button';
 
-const PauseScreen = ({completedCount, onContinue, onLeave}) => (
+const PauseScreen = ({completedCount, isBundleComplete, onContinue, onResume, onLeave}) => (
 	<div
 		className="min-h-screen bg-gradient-to-b from-indigo-900 via-purple-900 to-pink-900 flex items-center justify-center p-4">
 		<div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 text-center max-w-md">
@@ -11,9 +11,15 @@ const PauseScreen = ({completedCount, onContinue, onLeave}) => (
 				Tu as fait {completedCount} mots, c'est super !
 			</p>
 			<div className="flex gap-4 justify-center flex-col">
-			<Button variant="success" onClick={onContinue}>
-				Reprendre la mission !
-			</Button>
+			{isBundleComplete ? (
+				<Button variant="success" onClick={onContinue}>
+					Continuer la mission !
+				</Button>
+			) : (
+				<Button variant="success" onClick={onResume}>
+					Reprendre la mission !
+				</Button>
+			)}
 			<Button variant="warning" onClick={onLeave}>
 				Retourner à la sélection️
 			</Button>
