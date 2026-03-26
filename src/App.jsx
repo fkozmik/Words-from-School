@@ -1,128 +1,81 @@
-import {useMissionGame} from './hooks/useMissionGame';
+import { useMissionGame } from './hooks/useMissionGame';
 
 // Screens
 import LoadingScreen from './components/screens/LoadingScreen';
+import GameModeSelectionScreen from './components/screens/GameModeSelectionScreen';
 import ListSelectionScreen from './components/screens/ListSelectionScreen';
 import PauseScreen from './components/screens/PauseScreen';
 import CompletionScreen from './components/screens/CompletionScreen';
-
-// Game components
-import ProgressHeader from './components/game/ProgressHeader';
-import WordBundleDisplay from './components/game/WordBundleDisplay';
-import CurrentWordCard from './components/game/CurrentWordCard';
-import LetterArea from './components/game/LetterArea';
-import ActionButtons from './components/game/ActionButtons';
-
-// UI components
-import FeedbackOverlay from './components/ui/FeedbackOverlay';
-import BackgroundStars from './components/ui/BackgroundStars';
-import HamburgerMenu from './components/ui/HamburgerMenu.jsx';
+import GameScreen from './components/screens/GameScreen';
 
 const MissionSpatiale = () => {
-	const {state, derived, actions} = useMissionGame();
-	const {
-		wordLists,
-		selectedList,
-		wordsArray,
-		loading,
-		currentBundleIndex,
-		currentWordInBundle,
-		completedWords,
-		completedLists,
-		shuffledLetters,
-		selectedLetters,
-		showSuccess,
-		showError,
-		showPause,
-		isBundleComplete,
-		isComplete,
-	} = state;
-	const {
-		startIndex,
-		endIndex,
-		currentBundle,
-		currentWord
-	} = derived;
-	const {
-		handleSelectList,
-		handleLetterClick,
-		handleValidate,
-		handleReset,
-		handlePause,
-		handleContinueAfterPause,
-		handleResumeAfterPause,
-		handleLeave,
-		restartMission
-	} = actions;
+	const { state, derived, actions } = useMissionGame();
 
-	if (loading) {
-		return <LoadingScreen/>;
+	if (state.loading) {
+		return <LoadingScreen />;
 	}
 
-	if (!selectedList) {
+	if (!state.selectedMode) {
 		return (
-			<ListSelectionScreen
-				wordLists={wordLists}
-				onSelectList={handleSelectList}
-				completedLists={completedLists}
+			<GameModeSelectionScreen
+				modeList={state.modeList}
+				onSelectMode={actions.handleSelectMode}
 			/>
 		);
 	}
 
-	if (showPause) {
-		return (<PauseScreen
-			completedCount={completedWords.length}
-			isBundleComplete={isBundleComplete}
-			onContinue={handleContinueAfterPause}
-			onResume={handleResumeAfterPause}
-			onLeave={handleLeave}
-		/>);
+	if (!state.selectedList) {
+		return (
+			<ListSelectionScreen
+				wordLists={state.wordLists}
+				onSelectList={actions.handleSelectList}
+				completedLists={state.completedLists}
+			/>
+		);
 	}
 
-	if (isComplete) {
-		return (<CompletionScreen
-			completedCount={completedWords.length}
-			totalCount={wordsArray.length}
-			onRestart={restartMission}
-		/>);
+	if (state.showPause) {
+		return (
+			<PauseScreen
+				completedCount={state.completedWords.length}
+				isBundleComplete={state.isBundleComplete}
+				onContinue={actions.handleContinueAfterPause}
+				onResume={actions.handleResumeAfterPause}
+				onLeave={actions.handleLeave}
+			/>
+		);
 	}
 
-	return (<div className="min-h-screen bg-gradient-to-b from-indigo-900 via-purple-900 to-pink-900 p-4">
-		<HamburgerMenu onLeave={handleLeave} onPause={handlePause}/>
-		<ProgressHeader
-			selectedList={selectedList}
-			currentBundleIndex={currentBundleIndex}
-			currentWordInBundle={currentWordInBundle}
-			bundleLength={currentBundle.length}
-			completedCount={completedWords.length}
-			totalCount={wordsArray.length}
+	if (state.isComplete) {
+		return (
+			<CompletionScreen
+				completedCount={state.completedWords.length}
+				totalCount={state.wordsArray.length}
+				onRestart={actions.restartMission}
+			/>
+		);
+	}
+
+	return (
+		<GameScreen
+			selectedList={state.selectedList}
+			currentBundleIndex={state.currentBundleIndex}
+			currentWordInBundle={state.currentWordInBundle}
+			currentBundle={derived.currentBundle}
+			completedWords={state.completedWords}
+			wordsArray={state.wordsArray}
+			currentWord={derived.currentWord}
+			selectedLetters={state.selectedLetters}
+			shuffledLetters={state.shuffledLetters}
+			showSuccess={state.showSuccess}
+			showError={state.showError}
+			onLeave={actions.handleLeave}
+			onPause={actions.handlePause}
+			onLetterClick={actions.handleLetterClick}
+			onReset={actions.handleReset}
+			onValidate={actions.handleValidate}
 		/>
-
-		<WordBundleDisplay
-			bundle={currentBundle}
-			startIndex={startIndex}
-			currentWordInBundle={currentWordInBundle}
-			completedWords={completedWords}
-		/>
-
-		<CurrentWordCard word={currentWord}/>
-
-		<LetterArea
-			selectedLetters={selectedLetters}
-			shuffledLetters={shuffledLetters}
-			onLetterClick={handleLetterClick}
-		/>
-
-		<ActionButtons
-			selectedLetters={selectedLetters}
-			currentWord={currentWord}
-			onReset={handleReset}
-			onValidate={handleValidate}
-		/>
-
-		<FeedbackOverlay showSuccess={showSuccess} showError={showError}/>
-		<BackgroundStars/>
-	</div>);
+	);
 };
 
 export default MissionSpatiale;

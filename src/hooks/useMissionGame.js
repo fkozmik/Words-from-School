@@ -3,6 +3,8 @@ import {BUNDLE_SIZE} from '../constants/game';
 
 export const useMissionGame = () => {
 	const [wordLists, setWordLists] = useState({});
+	const [modeList, setModeList] = useState({});
+	const [selectedMode, setSelectedMode] = useState(null);
 	const [selectedList, setSelectedList] = useState(null);
 	const [wordsArray, setWordsArray] = useState([]);
 	const [loading, setLoading] = useState(true);
@@ -26,17 +28,30 @@ export const useMissionGame = () => {
 		setIsBundleComplete(false);
 		setShowPause(true);
 	};
-  	const [completedLists, setCompletedLists] = useState([]);
+	const [completedLists, setCompletedLists] = useState([]);
 
 	useEffect(() => {
 		fetch('/lists/words.json')
-			.then(res => res.json())
+			.then((res) => res.json())
 			.then(data => {
 				setWordLists(data);
 				setLoading(false);
 			})
 			.catch(err => {
-				console.error('Erreur chargement des mots:', err);
+				console.error('Erreur de chargement des mots:', err);
+				setLoading(false);
+			});
+	}, []);
+
+	useEffect(() => {
+		fetch('/lists/modes.json')
+			.then(res => res.json())
+			.then(data => {
+				setModeList(data);
+				setLoading(false);
+			})
+			.catch(err => {
+				console.error('Erreur de chargement des modes:', err);
 				setLoading(false);
 			});
 	}, []);
@@ -56,6 +71,10 @@ export const useMissionGame = () => {
 			}
 		}
 	}, [wordsArray, currentBundleIndex, currentWordInBundle]);
+
+	const handleSelectMode = (modeName) => {
+		setSelectedMode(modeName);
+	};
 
 	const handleSelectList = (listName) => {
 		setSelectedList(listName);
@@ -135,14 +154,16 @@ export const useMissionGame = () => {
 
 	return {
 		state: {
-			wordLists, selectedList, wordsArray, loading,
+			wordLists, modeList, selectedMode, selectedList, wordsArray, loading,
 			currentBundleIndex, currentWordInBundle, completedWords,
 			shuffledLetters, selectedLetters,
 			showSuccess, showError, showPause, isBundleComplete, isComplete, completedLists,
 		},
-		derived: {startIndex, endIndex, currentBundle, currentWord},
+		derived: {
+			startIndex, endIndex, currentBundle, currentWord
+		},
 		actions: {
-			handleSelectList, handleLetterClick, handleValidate,
+			handleSelectList, handleLetterClick, handleValidate, handleSelectMode,
 			handleReset, handleContinueAfterPause, handleResumeAfterPause, restartMission,
 			handleLeave, handlePause,
 		},
