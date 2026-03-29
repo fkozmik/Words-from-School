@@ -37,7 +37,7 @@ const MissionSpatiale = () => {
 	if (state.showPause) {
 		return (
 			<PauseScreen
-				completedCount={state.completedWords.length}
+				completedCount={state.completedWords.size}
 				isBundleComplete={state.isBundleComplete}
 				onContinue={actions.handleContinueAfterPause}
 				onResume={actions.handleResumeAfterPause}
@@ -49,7 +49,7 @@ const MissionSpatiale = () => {
 	if (state.isComplete) {
 		return (
 			<CompletionScreen
-				completedCount={state.completedWords.length}
+				completedCount={state.completedWords.size}
 				totalCount={state.wordsArray.length}
 				onRestart={actions.restartMission}
 			/>
@@ -58,6 +58,7 @@ const MissionSpatiale = () => {
 
 	return (
 		<GameScreen
+			startIndex={derived.startIndex}
 			selectedList={state.selectedList}
 			currentBundleIndex={state.currentBundleIndex}
 			currentWordInBundle={state.currentWordInBundle}
@@ -69,6 +70,7 @@ const MissionSpatiale = () => {
 			shuffledLetters={state.shuffledLetters}
 			showSuccess={state.showSuccess}
 			showError={state.showError}
+			selectedMode={state.selectedMode}
 			onLeave={actions.handleLeave}
 			onPause={actions.handlePause}
 			onLetterClick={actions.handleLetterClick}

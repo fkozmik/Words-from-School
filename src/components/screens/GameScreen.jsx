@@ -8,6 +8,7 @@ import BackgroundStars from '../ui/BackgroundStars';
 import HamburgerMenu from '../ui/HamburgerMenu';
 
 const GameScreen = ({
+						startIndex,
 						selectedList,
 						currentBundleIndex,
 						currentWordInBundle,
@@ -24,6 +25,7 @@ const GameScreen = ({
 						onLetterClick,
 						onReset,
 						onValidate,
+						selectedMode,
 					}) => (
 	<div className="min-h-screen bg-gradient-to-b from-indigo-900 via-purple-900 to-pink-900 p-4">
 		<HamburgerMenu onLeave={onLeave} onPause={onPause} />
@@ -32,12 +34,12 @@ const GameScreen = ({
 			currentBundleIndex={currentBundleIndex}
 			currentWordInBundle={currentWordInBundle}
 			bundleLength={currentBundle.length}
-			completedCount={completedWords.length}
+			completedCount={completedWords.size}
 			totalCount={wordsArray.length}
 		/>
 		<WordBundleDisplay
 			bundle={currentBundle}
-			startIndex={currentBundleIndex * currentBundle.length}
+			startIndex={startIndex}
 			currentWordInBundle={currentWordInBundle}
 			completedWords={completedWords}
 		/>
@@ -46,10 +48,11 @@ const GameScreen = ({
 			selectedLetters={selectedLetters}
 			shuffledLetters={shuffledLetters}
 			onLetterClick={onLetterClick}
+			selectedMode={selectedMode}
 		/>
 		<ActionButtons
 			selectedLetters={selectedLetters}
-			currentWord={currentWord}
+			shuffledLetters={shuffledLetters}
 			onReset={onReset}
 			onValidate={onValidate}
 		/>

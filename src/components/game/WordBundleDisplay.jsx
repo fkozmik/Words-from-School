@@ -3,7 +3,7 @@ const WordBundleDisplay = ({ bundle, startIndex, currentWordInBundle, completedW
     <div className="flex gap-3 justify-center flex-wrap">
       {bundle.map((word, idx) => {
         const globalIdx = startIndex + idx;
-        const isCompleted = completedWords.includes(globalIdx);
+        const isCompleted = completedWords.has(globalIdx);
         const isCurrent = idx === currentWordInBundle;
 
         return (

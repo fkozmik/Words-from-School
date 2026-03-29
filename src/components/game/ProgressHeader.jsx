@@ -12,7 +12,7 @@ const ProgressHeader = ({
     <div className="flex items-center justify-between mb-4">
       <div className="text-white">
         <h2 className="text-2xl font-bold">
-          {selectedList} - Bundle {currentBundleIndex + 1} - Mot {currentWordInBundle + 1}/{bundleLength}
+          {selectedList} - Série {currentBundleIndex + 1} - Mot {currentWordInBundle + 1}/{bundleLength}
         </h2>
         <p className="text-blue-300">Total: {completedCount}/{totalCount}</p>
       </div>
