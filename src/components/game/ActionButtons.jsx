@@ -1,7 +1,7 @@
 import { Check } from 'lucide-react';
 import Button from '../ui/Button';
 
-const ActionButtons = ({ selectedLetters, currentWord, onReset, onValidate }) => {
+const ActionButtons = ({ selectedLetters, shuffledLetters, onReset, onValidate }) => {
   if (selectedLetters.length === 0) return null;
 
   return (
@@ -10,7 +10,7 @@ const ActionButtons = ({ selectedLetters, currentWord, onReset, onValidate }) =>
         Recommencer
       </Button>
 
-      {selectedLetters.length === currentWord.length && (
+      {shuffledLetters.length === 0 && (
         <Button variant="success" pulse onClick={onValidate}>
           <Check className="w-6 h-6" />
           OK !

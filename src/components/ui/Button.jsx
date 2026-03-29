@@ -29,11 +29,13 @@ const Button = ({
   ...props
 }) => {
   const noScale = variant === 'ghost' || variant === 'menuItem';
-  const baseClasses = `font-bold ${noScale ? '' : 'hover:scale-105'} transition-all touch-manipulation select-none flex items-center gap-2 ${variant === 'menuItem' ? '' : 'justify-center'}`;
+  const baseClasses = `font-bold transition-all touch-manipulation select-none flex items-center gap-2 ${variant === 'menuItem' ? '' : 'justify-center'}`;
   const roundedClasses = { full: 'rounded-full', '2xl': 'rounded-2xl', xl: 'rounded-xl' };
   const roundedClass = roundedClasses[rounded] || 'rounded-full';
   const pulseClass = pulse ? 'animate-pulse' : '';
-  const scaleClass = size === 'lg' || size === 'icon' ? 'hover:scale-110 active:scale-95' : '';
+  const scaleClass = noScale ? ''
+    : (size === 'lg' || size === 'icon') ? 'hover:scale-110 active:scale-95'
+    : 'hover:scale-105 active:scale-95';
 
   return (
     <button

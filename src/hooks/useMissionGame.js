@@ -1,15 +1,17 @@
 import { useState, useEffect } from 'react';
-import {BUNDLE_SIZE} from '../constants/game';
+import { BUNDLE_SIZE } from '../constants/game';
+import { syllabify } from '../utils/syllabify';
 
 export const useMissionGame = () => {
 	const [wordLists, setWordLists] = useState({});
+	const [modeList, setModeList] = useState({});
+	const [selectedMode, setSelectedMode] = useState(null);
 	const [selectedList, setSelectedList] = useState(null);
 	const [wordsArray, setWordsArray] = useState([]);
 	const [loading, setLoading] = useState(true);
-
 	const [currentBundleIndex, setCurrentBundleIndex] = useState(0);
 	const [currentWordInBundle, setCurrentWordInBundle] = useState(0);
-	const [completedWords, setCompletedWords] = useState([]);
+	const [completedWords, setCompletedWords] = useState(new Set());
 	const [shuffledLetters, setShuffledLetters] = useState([]);
 	const [selectedLetters, setSelectedLetters] = useState([]);
 	const [showSuccess, setShowSuccess] = useState(false);
@@ -17,29 +19,37 @@ export const useMissionGame = () => {
 	const [showPause, setShowPause] = useState(false);
 	const [isBundleComplete, setIsBundleComplete] = useState(false);
 	const [isComplete, setIsComplete] = useState(false);
+	const [completedLists, setCompletedLists] = useState([]);
+
 	const handleLeave = () => {
 		setShowPause(false);
 		setIsBundleComplete(false);
 		setSelectedList(null);
 	};
+
 	const handlePause = () => {
 		setIsBundleComplete(false);
 		setShowPause(true);
 	};
-  	const [completedLists, setCompletedLists] = useState([]);
 
 	useEffect(() => {
-		fetch('/lists/words.json')
-			.then(res => res.json())
-			.then(data => {
-				setWordLists(data);
+		Promise.all([
+			fetch('/lists/words.json').then(r => r.json()),
+			fetch('/lists/modes.json').then(r => r.json()),
+		])
+			.then(([words, modes]) => {
+				setWordLists(words);
+				setModeList(modes);
 				setLoading(false);
 			})
 			.catch(err => {
-				console.error('Erreur chargement des mots:', err);
+				console.error('Erreur de chargement:', err);
 				setLoading(false);
 			});
 	}, []);
+
+	const getUnits = (word) =>
+		selectedMode === 'Syllabes' ? syllabify(word) : word.split('');
 
 	useEffect(() => {
 		if (wordsArray.length > 0 && currentBundleIndex < Math.ceil(wordsArray.length / BUNDLE_SIZE)) {
@@ -49,27 +59,28 @@ export const useMissionGame = () => {
 			const currentWord = currentBundle[currentWordInBundle];
 
 			if (currentWord) {
-				const letters = currentWord.split('').sort(() => Math.random() - 0.5);
-				setShuffledLetters(letters);
+				setShuffledLetters([...getUnits(currentWord)].sort(() => Math.random() - 0.5));
 				setSelectedLetters([]);
 				setShowSuccess(false);
 			}
 		}
-	}, [wordsArray, currentBundleIndex, currentWordInBundle]);
+	}, [wordsArray, currentBundleIndex, currentWordInBundle, selectedMode]);
+
+	const handleSelectMode = (modeName) => {
+		setSelectedMode(modeName);
+	};
 
 	const handleSelectList = (listName) => {
 		setSelectedList(listName);
 		setWordsArray(wordLists[listName]);
 		setCurrentBundleIndex(0);
 		setCurrentWordInBundle(0);
-		setCompletedWords([]);
+		setCompletedWords(new Set());
 	};
 
 	const handleLetterClick = (letter, index) => {
-		const newSelected = [...selectedLetters, letter];
-		setSelectedLetters(newSelected);
-		const newShuffled = shuffledLetters.filter((_, i) => i !== index);
-		setShuffledLetters(newShuffled);
+		setSelectedLetters(prev => [...prev, letter]);
+		setShuffledLetters(prev => prev.filter((_, i) => i !== index));
 	};
 
 	// Calculs dérivés
@@ -83,39 +94,38 @@ export const useMissionGame = () => {
 		if (formedWord === currentWord) {
 			setShowSuccess(true);
 			const globalWordIndex = startIndex + currentWordInBundle;
-			setCompletedWords([...completedWords, globalWordIndex]);
+			setCompletedWords(prev => new Set([...prev, globalWordIndex]));
 
 			setTimeout(() => {
-        const currentBundle = wordsArray.slice(startIndex, endIndex);
 				if (currentWordInBundle < currentBundle.length - 1) {
-					setCurrentWordInBundle(currentWordInBundle + 1);
+					setCurrentWordInBundle(prev => prev + 1);
 				} else if (endIndex < wordsArray.length) {
 					setIsBundleComplete(true);
 					setShowPause(true);
 				} else {
 					setIsComplete(true);
-          setCompletedLists(prev => [...new Set([...prev, selectedList])]);
+					setCompletedLists(prev => [...new Set([...prev, selectedList])]);
 				}
 			}, 1500);
 		} else {
 			setShowError(true);
 			setTimeout(() => {
 				setShowError(false);
-				setShuffledLetters(currentWord.split('').sort(() => Math.random() - 0.5));
+				setShuffledLetters([...getUnits(currentWord)].sort(() => Math.random() - 0.5));
 				setSelectedLetters([]);
 			}, 1000);
 		}
 	};
 
 	const handleReset = () => {
-		setShuffledLetters(currentWord.split('').sort(() => Math.random() - 0.5));
+		setShuffledLetters([...getUnits(currentWord)].sort(() => Math.random() - 0.5));
 		setSelectedLetters([]);
 	};
 
 	const handleContinueAfterPause = () => {
 		setShowPause(false);
 		setIsBundleComplete(false);
-		setCurrentBundleIndex(currentBundleIndex + 1);
+		setCurrentBundleIndex(prev => prev + 1);
 		setCurrentWordInBundle(0);
 	};
 
@@ -125,24 +135,27 @@ export const useMissionGame = () => {
 	};
 
 	const restartMission = () => {
+		setSelectedMode(null);
 		setSelectedList(null);
 		setWordsArray([]);
 		setCurrentBundleIndex(0);
 		setCurrentWordInBundle(0);
-		setCompletedWords([]);
+		setCompletedWords(new Set());
 		setIsComplete(false);
 	};
 
 	return {
 		state: {
-			wordLists, selectedList, wordsArray, loading,
+			wordLists, modeList, selectedMode, selectedList, wordsArray, loading,
 			currentBundleIndex, currentWordInBundle, completedWords,
 			shuffledLetters, selectedLetters,
 			showSuccess, showError, showPause, isBundleComplete, isComplete, completedLists,
 		},
-		derived: {startIndex, endIndex, currentBundle, currentWord},
+		derived: {
+			startIndex, endIndex, currentBundle, currentWord
+		},
 		actions: {
-			handleSelectList, handleLetterClick, handleValidate,
+			handleSelectList, handleLetterClick, handleValidate, handleSelectMode,
 			handleReset, handleContinueAfterPause, handleResumeAfterPause, restartMission,
 			handleLeave, handlePause,
 		},
