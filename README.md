@@ -1,40 +1,36 @@
 # Mission Spatiale
 
+Note for my foreign friends:  
+	This game has been developed to help my son learn to read.  
+	It is not expected to have either commercial use or different language support. 
+	<3
+
 Application web éducative pour aider les enfants à apprendre l'orthographe des mots en français. Les enfants doivent reconstituer des mots en cliquant sur les lettres mélangées, le tout dans un univers spatial coloré et engageant.
-
-## Fonctionnalités
-
-- **Sélection de listes** : Plusieurs niveaux de difficulté (syllabes simples à complexes)
-- **Système de bundles** : Les mots sont présentés par groupes pour éviter la fatigue
-- **Pause et reprise** : Possibilité de mettre le jeu en pause et de reprendre plus tard
-- **Suivi de progression** : Affichage des mots complétés et des listes terminées
-- **Synthèse vocale** : Lecture audio du mot à épeler (clic sur la carte du mot)
-- **Interface tactile** : Optimisée pour tablettes et smartphones
-
-## Technologies
-
-- React 19
-- Vite 7
-- Tailwind CSS 4
-- Lucide React (icônes)
 
 ## Structure du projet
 
 ```
-src/
-  App.jsx                    # Composant principal
-  hooks/
-    useMissionGame.js        # Logique du jeu
-  components/
-    screens/                 # Écrans (sélection, pause, completion)
-    game/                    # Composants de jeu (lettres, progression)
-    ui/                      # Composants UI réutilisables
-  constants/
-    game.js                  # Configuration (taille des bundles)
-  utils/
-    speech.js                # Synthèse vocale
-lists/
-  words.json                 # Listes de mots par niveau
+Words-from-School
+├── CLAUDE.md
+├── index.html
+├── LICENSE
+├── lists
+│├── modes.json
+│└── words.json
+├── package.json
+├── package-lock.json
+├── postcss.config.js
+├── README.md
+├── shell.nix
+├── src
+│├── App.jsx
+│├── components
+│├── constants
+│├── hooks
+│├── index.css
+│├── main.jsx
+│└── utils
+└── vite.config.js
 ```
 
 ## Personnalisation des mots
