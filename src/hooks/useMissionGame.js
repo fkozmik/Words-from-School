@@ -34,8 +34,8 @@ export const useMissionGame = () => {
 
 	useEffect(() => {
 		Promise.all([
-			fetch('/lists/words.json').then(r => r.json()),
-			fetch('/lists/modes.json').then(r => r.json()),
+			fetch(`${import.meta.env.BASE_URL}lists/words.json`).then(r => r.json()),
+			fetch(`${import.meta.env.BASE_URL}lists/modes.json`).then(r => r.json()),
 		])
 			.then(([words, modes]) => {
 				setWordLists(words);
