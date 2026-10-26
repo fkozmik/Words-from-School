@@ -1,7 +1,7 @@
 { pkgs ? import <nixpkgs> {} }:
 
 pkgs.mkShell {
-  buildInputs = [ pkgs.nodejs_22 ];
+  buildInputs = [ pkgs.nodejs_24 ];
 
   shellHook = ''
 	echo "Environnement prêt !"
